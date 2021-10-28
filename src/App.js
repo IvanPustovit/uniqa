@@ -187,7 +187,7 @@ function App() {
             </form>
             {price && (
                 <p className="price">
-                    {price.arithmeticMean}.00 ${" "}
+                    {Number(price.arithmeticMean).toFixed(2)} ${" "}
                     <span>Середня ціна на ринку</span>
                 </p>
             )}
