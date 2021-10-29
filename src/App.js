@@ -116,7 +116,7 @@ function App() {
                 onSubmit={(e) => getPrice(e)}
                 className="form"
             >
-                <select onChange={(e) => changeHandler(e)}>
+                <select onChange={(e) => changeHandler(e)} id="type">
                     <option key={0} value={0}>
                         {"Виберіть тип авто"}
                     </option>
@@ -138,7 +138,10 @@ function App() {
                 </select>
             </div> */}
 
-                <select onChange={(e) => setMarkSelect(e.target.value)}>
+                <select
+                    onChange={(e) => setMarkSelect(e.target.value)}
+                    id="mark"
+                >
                     <option value={null}>Виберіть марку авто</option>
                     {marks.map((el) => (
                         <option key={el.value} value={el.value}>
@@ -147,7 +150,10 @@ function App() {
                     ))}
                 </select>
 
-                <select onChange={(e) => setModelSelect(e.target.value)}>
+                <select
+                    onChange={(e) => setModelSelect(e.target.value)}
+                    id="model"
+                >
                     <option value={null}>Виберіть модель авто</option>
                     {models.map((el) => (
                         <option key={el.value} value={el.value}>
@@ -156,7 +162,10 @@ function App() {
                     ))}
                 </select>
 
-                <select onChange={(e) => setYearlSelect(e.target.value)}>
+                <select
+                    onChange={(e) => setYearlSelect(e.target.value)}
+                    id="year"
+                >
                     <option value={null}>Виберіть рік випуску авто</option>
                     {years.map((el) => (
                         <option key={el} value={el}>
@@ -166,6 +175,7 @@ function App() {
                 </select>
 
                 <input
+                    id="engine"
                     type="number"
                     step="any"
                     placeholder="обєм двигуна"
@@ -175,6 +185,7 @@ function App() {
                 />
 
                 <input
+                    id="race"
                     type="number"
                     step="any"
                     placeholder="Пробіг в тис.км"
