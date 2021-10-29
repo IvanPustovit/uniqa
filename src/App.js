@@ -194,7 +194,7 @@ function App() {
                     }}
                 />
 
-                <button>Отримати ціну</button>
+                <button id="send">Отримати ціну</button>
             </form>
             {price && (
                 <p className="price">
