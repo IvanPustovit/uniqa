@@ -49,29 +49,31 @@ function App() {
                                 (m) => m.name == el.Модель
                             )
                             if (model) {
-                                axios
-                                    .get(
-                                        `${baseUrl}average_price?api_key=${apiRia}&marka_id=${value}&model_id=${
-                                            model.value
-                                        }&yers=${
-                                            el["Рік випуску ТЗ (Карверт)"]
-                                        }&engineVolumeFrom=${
-                                            el["Об`єм двигуна (Карверт)"]
-                                        }&engineVolumeTo=${
-                                            el["Об`єм двигуна (Карверт)"]
-                                        }&raceInt=${0}&raceInt=${
-                                            el["Пробіг (Карверт)"]
-                                        }`
-                                    )
-                                    .then((r) => {
-                                        const b = {
-                                            ...el,
-                                            priceRia: r.data.arithmeticMean,
-                                            priceRia25:
-                                                r.data.interQuartileMean,
-                                        }
-                                        setP((pr) => [...pr, b])
-                                    })
+                                setTimeout(() => {
+                                    axios
+                                        .get(
+                                            `${baseUrl}average_price?api_key=${apiRia}&marka_id=${value}&model_id=${
+                                                model.value
+                                            }&yers=${
+                                                el["Рік випуску ТЗ (Карверт)"]
+                                            }&engineVolumeFrom=${
+                                                el["Об`єм двигуна (Карверт)"]
+                                            }&engineVolumeTo=${
+                                                el["Об`єм двигуна (Карверт)"]
+                                            }&raceInt=${0}&raceInt=${
+                                                el["Пробіг (Карверт)"]
+                                            }`
+                                        )
+                                        .then((r) => {
+                                            const b = {
+                                                ...el,
+                                                priceRia: r.data.arithmeticMean,
+                                                priceRia25:
+                                                    r.data.interQuartileMean,
+                                            }
+                                            setP((pr) => [...pr, b])
+                                        })
+                                }, 2500)
                             }
                         })
                 } catch (error) {
@@ -114,7 +116,7 @@ function App() {
             const res = await axios.get(
                 `${baseUrl}categories/${typeAutoSelect}/marks?api_key=${apiRia}`
             )
-            // await exList(res.data)
+            await exList(res.data)
 
             return setMarks(res.data)
         } catch (error) {
@@ -147,7 +149,7 @@ function App() {
     }
     // getMarks()
     // console.log(marks)
-    // console.log(p)
+    console.log(p)
     useEffect(async () => {
         getType()
         // getTypeBody()
