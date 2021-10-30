@@ -1,17 +1,20 @@
 import "./App.css"
 import { useEffect, useState } from "react"
 import axios from "axios"
+import { list } from "./ex"
 
 const baseUrl = "https://developers.ria.com/auto/"
 const apiRia = "2WXq0CMtAtMm2dJSXzSHEyj0JpnTgplERjxpw00E"
 
 function App() {
     const [typeAutoBodySelect, setTypeAutoBodySelect] = useState(null)
-    const [typeAutoSelect, setTypeAutoSelect] = useState(0)
+    const [typeAutoSelect, setTypeAutoSelect] = useState(1)
     const [markSelect, setMarkSelect] = useState(null)
     const [modelSelect, setModelSelect] = useState(null)
     const [yearlSelect, setYearlSelect] = useState(null)
     const [engine, setEngine] = useState(null)
+    const [l, setL] = useState(list)
+    const [p, setP] = useState([])
 
     const [typeAuto, setTypeAuto] = useState([
         { name: "Виберіть тип авто", value: null },
@@ -30,6 +33,54 @@ function App() {
         2018, 2019, 2020, 2021,
     ])
 
+    const exList = async (mark) => {
+        axios.all(
+            l.map((el) => {
+                const { value } = mark.find(
+                    (e) => e.name == el["Марка ТЗ (Карверт)"]
+                )
+                try {
+                    axios
+                        .get(
+                            `${baseUrl}categories/1/marks/${value}/models?api_key=${apiRia}`
+                        )
+                        .then((r) => {
+                            const model = r.data.find(
+                                (m) => m.name == el.Модель
+                            )
+                            if (model) {
+                                axios
+                                    .get(
+                                        `${baseUrl}average_price?api_key=${apiRia}&marka_id=${value}&model_id=${
+                                            model.value
+                                        }&yers=${
+                                            el["Рік випуску ТЗ (Карверт)"]
+                                        }&engineVolumeFrom=${
+                                            el["Об`єм двигуна (Карверт)"]
+                                        }&engineVolumeTo=${
+                                            el["Об`єм двигуна (Карверт)"]
+                                        }&raceInt=${0}&raceInt=${
+                                            el["Пробіг (Карверт)"]
+                                        }`
+                                    )
+                                    .then((r) => {
+                                        const b = {
+                                            ...el,
+                                            priceRia: r.data.arithmeticMean,
+                                            priceRia25:
+                                                r.data.interQuartileMean,
+                                        }
+                                        setP((pr) => [...pr, b])
+                                    })
+                            }
+                        })
+                } catch (error) {
+                    console.log(error)
+                }
+            })
+        )
+    }
+    // console.log(p)
     const changeHandler = (e) => {
         // console.dir(e.target)
         setTypeAutoSelect(e.target.value)
@@ -46,23 +97,24 @@ function App() {
         }
     }
 
-    const getTypeBody = async () => {
-        try {
-            const res = await axios.get(
-                `${baseUrl}categories/${typeAutoSelect}/bodystyles?api_key=${apiRia}`
-            )
+    // const getTypeBody = async () => {
+    //     try {
+    //         const res = await axios.get(
+    //             `${baseUrl}categories/${typeAutoSelect}/bodystyles?api_key=${apiRia}`
+    //         )
 
-            return setTypeAutoBody(res.data)
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    //         return setTypeAutoBody(res.data)
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
 
     const getMarks = async () => {
         try {
             const res = await axios.get(
                 `${baseUrl}categories/${typeAutoSelect}/marks?api_key=${apiRia}`
             )
+            // await exList(res.data)
 
             return setMarks(res.data)
         } catch (error) {
@@ -93,14 +145,19 @@ function App() {
             console.log(error)
         }
     }
-
-    useEffect(() => {
+    // getMarks()
+    // console.log(marks)
+    // console.log(p)
+    useEffect(async () => {
         getType()
         // getTypeBody()
-
+        // await getMarks()
         if (typeAutoSelect == 0) {
             setMarks([])
         }
+
+        // exList()
+
         if (typeAutoSelect != 0) {
             getMarks()
         }
@@ -117,9 +174,9 @@ function App() {
                 className="form"
             >
                 <select onChange={(e) => changeHandler(e)} id="type">
-                    <option key={0} value={0}>
+                    {/* <option key={0} value={0}>
                         {"Виберіть тип авто"}
-                    </option>
+                    </option> */}
                     {typeAuto.map((el) => (
                         <option key={el.value} value={el.value}>
                             {el.name}
@@ -197,10 +254,16 @@ function App() {
                 <button id="send">Отримати ціну</button>
             </form>
             {price && (
-                <p className="price">
-                    {Number(price.arithmeticMean).toFixed(2)} ${" "}
-                    <span>Середня ціна на ринку</span>
-                </p>
+                <>
+                    <p className="price">
+                        {Number(price.arithmeticMean).toFixed(2)} ${" "}
+                        <span>Середня ціна на ринку</span>
+                    </p>
+                    <p className="price">
+                        {Number(price.interQuartileMean).toFixed(2)} ${" "}
+                        <span>Середня ціна на ринку 50%</span>
+                    </p>
+                </>
             )}
         </div>
     )
