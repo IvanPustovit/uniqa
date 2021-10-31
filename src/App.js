@@ -147,9 +147,7 @@ function App() {
             console.log(error)
         }
     }
-    // getMarks()
-    // console.log(marks)
-    console.log(p)
+
     useEffect(async () => {
         getType()
         // getTypeBody()
@@ -157,8 +155,6 @@ function App() {
         if (typeAutoSelect == 0) {
             setMarks([])
         }
-
-        // exList()
 
         if (typeAutoSelect != 0) {
             getMarks()
