@@ -116,7 +116,7 @@ function App() {
             const res = await axios.get(
                 `${baseUrl}categories/${typeAutoSelect}/marks?api_key=${apiRia}`
             )
-            await exList(res.data)
+            // await exList(res.data)
 
             return setMarks(res.data)
         } catch (error) {
