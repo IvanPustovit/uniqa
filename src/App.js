@@ -148,7 +148,7 @@ function App() {
             const res = await axios.get(
                 `${baseUrl}average_price?api_key=${apiRia}&marka_id=${markSelect}&model_id=${modelSelect}&yers=${yearlSelect}&engineVolumeFrom=${engine}&engineVolumeTo=${engine}&raceInt=${0}&raceInt=${raceInt}`
             )
-            console.log(res.data)
+
             return setPrice(res.data)
         } catch (error) {
             console.log(error)
@@ -261,10 +261,10 @@ function App() {
 
             {price && (
                 <div className="priceTable">
-                    <div>
+                    <div style={{ border: "1px solid black" }}>
                         <p style={{ height: 20 }}>Ринкова вартість</p>
                         <div className="table">
-                            <div>
+                            <div style={{ borderRight: "1px solid black" }}>
                                 <p>USD</p>
                                 <p className="price">
                                     {Number(price.arithmeticMean).toFixed(2)}
@@ -281,10 +281,10 @@ function App() {
                             </div>
                         </div>
                     </div>
-                    <div>
+                    <div style={{ border: "1px solid black" }}>
                         <p style={{ height: 20 }}>Середня ринкова вартість</p>
                         <div className="table">
-                            <div>
+                            <div style={{ borderRight: "1px solid black" }}>
                                 <p>USD</p>
                                 <p className="price">
                                     {Number(price.interQuartileMean).toFixed(2)}
