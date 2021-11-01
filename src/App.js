@@ -15,6 +15,7 @@ function App() {
     const [engine, setEngine] = useState(null)
     const [l, setL] = useState(list)
     const [p, setP] = useState([])
+    const [ccy, setCcy] = useState({})
 
     const [typeAuto, setTypeAuto] = useState([
         { name: "Виберіть тип авто", value: null },
@@ -93,6 +94,11 @@ function App() {
             const res = await axios.get(
                 `${baseUrl}categories/?api_key=${apiRia}`
             )
+            const r = await axios.get(
+                "https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11"
+            )
+
+            setCcy(r.data[0])
             return setTypeAuto(res.data)
         } catch (error) {
             console.log(error)
@@ -142,6 +148,7 @@ function App() {
             const res = await axios.get(
                 `${baseUrl}average_price?api_key=${apiRia}&marka_id=${markSelect}&model_id=${modelSelect}&yers=${yearlSelect}&engineVolumeFrom=${engine}&engineVolumeTo=${engine}&raceInt=${0}&raceInt=${raceInt}`
             )
+            console.log(res.data)
             return setPrice(res.data)
         } catch (error) {
             console.log(error)
@@ -251,17 +258,56 @@ function App() {
 
                 <button id="send">Отримати ціну</button>
             </form>
+
             {price && (
-                <>
-                    <p className="price">
-                        {Number(price.arithmeticMean).toFixed(2)} ${" "}
-                        <span>Середня ціна на ринку</span>
-                    </p>
-                    <p className="price">
-                        {Number(price.interQuartileMean).toFixed(2)} ${" "}
-                        <span>Середня ціна на ринку 50%</span>
-                    </p>
-                </>
+                <div className="priceTable">
+                    <div>
+                        <p style={{ height: 20 }}>Ринкова вартість</p>
+                        <div className="table">
+                            <div>
+                                <p>USD</p>
+                                <p className="price">
+                                    {Number(price.arithmeticMean).toFixed(2)}
+                                </p>
+                            </div>
+                            <div>
+                                <p>UAH</p>
+                                <p className="price">
+                                    {(
+                                        Number(price.arithmeticMean) *
+                                        Number(ccy.sale)
+                                    ).toFixed(2)}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p style={{ height: 20 }}>Середня ринкова вартість</p>
+                        <div className="table">
+                            <div>
+                                <p>USD</p>
+                                <p className="price">
+                                    {Number(price.interQuartileMean).toFixed(2)}
+                                </p>
+                            </div>
+                            <div>
+                                <p>UAH</p>
+                                <p className="price">
+                                    {(
+                                        Number(price.interQuartileMean) *
+                                        Number(ccy.sale)
+                                    ).toFixed(2)}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {price && (
+                <p>
+                    Кількість авто в розрахунку:{" "}
+                    <span style={{ fontSize: 25 }}>{price.total}</span>
+                </p>
             )}
         </div>
     )

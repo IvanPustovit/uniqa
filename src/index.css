@@ -25,6 +25,21 @@ form {
 
 .price {
     margin-top: 25px;
-    font-size: 20px;
+    font-size: 15px;
     color: brown;
+}
+
+.priceTable {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    width: 350px;
+    margin: 0 auto;
+    grid-gap: 5px;
+    padding-top: 15px;
+}
+
+.table {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: 30px;
 }
